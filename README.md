@@ -28,4 +28,4 @@ You will have a second chance to confirm any changes before they are saved to Ma
 
 ## Help / Extending
 
-To modify or extend this tool, it is recommended to read/refer to the API docs for `[python-mailchimp](https://github.com/charlesthk/python-mailchimp)`.
+To modify or extend this tool, it is recommended to read/refer to the API docs for [`python-mailchimp`](https://github.com/charlesthk/python-mailchimp).
