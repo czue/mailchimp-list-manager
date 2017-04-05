@@ -12,6 +12,10 @@ or if you do a lot of testing and want to clean out your lists.
 
 `pip install -r requirements.txt`
 
+### Run the flask app
+
+`FLASK_APP=server.py FLASK_DEBUG=1 flask run`
+
 ### Configure Mailchimp Settings
 
 Copy the example config file locally.
