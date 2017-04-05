@@ -86,12 +86,21 @@
     </div>
 </div>
 <script>
-    var apiKey, listName, seenSubscribeConfirm = false, seenDeleteConfirm = false;  // "globals"
+    var apiKey, listId, listName, seenSubscribeConfirm = false, seenDeleteConfirm = false;  // "globals"
     // debug only
     apiKey = "{{ api_key }}";
 
     function genericError() {
         $("#error-row").show();
+    }
+
+    function showUpdateSuccess(response) {
+        // UI handling for a successful subscription
+        var memberRow = $('#' + response.id);
+        // update status
+        memberRow.find('td:nth-child(3)').html('').append($('<strong />').text(response.status));
+        // hide buttons
+        memberRow.find('td:nth-child(4)').html('');
     }
 
     function loadLists(lists) {
@@ -104,39 +113,60 @@
         $('#lists-row').show();
     }
 
+    function updateMember(memberId, status, callback) {
+        // sets the status of a member to be, e.g. "deleted"
+        data = {
+            'api-key': apiKey,
+            'list': listId,
+            'member-id': memberId,
+            'status': status
+
+        }
+        $.ajax({
+             url: '/api/update_member/',
+             type: 'post',
+             'data': data,
+             success: showUpdateSuccess,
+             error: genericError,
+        });
+    }
+
     function subscribeEmail() {
-        var userId = $(this).closest('tr').attr('id');
-        var userEmail = $(this).closest('tr').find('td:first').text();
-        if (seenSubscribeConfirm || confirm('Are you sure you want to subscribe ' + userEmail + ' to "' + listName +
+        var memberId = $(this).closest('tr').attr('id');
+        var memberEmail = $(this).closest('tr').find('td:first').text();
+        if (seenSubscribeConfirm || confirm('Are you sure you want to subscribe ' + memberEmail + ' to "' + listName +
                 '"? \n\nYou should only do this if you have their consent. \n\n' +
                 "If you proceed, this dialog t be shown again.")) {
             // moving ahead
             seenSubscribeConfirm = true;
             // subscribe
-            console.log('subscribe!');
-        } else {
-            console.log('bail!');
+            updateMember(memberId, 'subscribed')
         }
     }
 
     function deleteEmail() {
-        var userId = $(this).closest('tr').attr('id');
-        var userEmail = $(this).closest('tr').find('td:first').text();
-        if (seenDeleteConfirm || confirm('Are you sure you want to delete ' + userEmail + ' from "' + listName +
+        var memberId = $(this).closest('tr').attr('id');
+        var memberEmail = $(this).closest('tr').find('td:first').text();
+        if (seenDeleteConfirm || confirm('Are you sure you want to delete ' + memberEmail + ' from "' + listName +
                 '"? \n\nThis is PERMANENT and NOT UNDOABLE. ' +
                 "\n\nIf you proceed, this dialog won't be shown again.")) {
             // moving ahead
             seenDeleteConfirm = true;
             // delete
-            console.log('delete!');
-        } else {
-            console.log('bail!');
+            updateMember(memberId, 'deleted')
         }
     }
 
     function loadMembers(members) {
-        var membersTableBody = $('#members').find('tbody');
+        // update globals
+        listId = $('#lists').find(":selected").val();
         listName = $('#lists').find(":selected").text();
+
+        // wipe anything existing in member table
+        $('#members tbody').html('');
+
+        // render member table
+        var membersTableBody = $('#members').find('tbody');
         $.each(members.members, function() {
             membersTableBody.append(
                 $("<tr />").attr('id', this.id).append(

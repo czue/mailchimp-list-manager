@@ -26,7 +26,20 @@ def get_members():
     return Response(json.dumps(members), mimetype='application/json')
 
 
+@app.route('/api/update_member/', methods=['POST'])
+def update_member():
+    client = _get_mailchimp_client()
+    list_id = request.form['list']
+    member_id = request.form['member-id']
+    status = request.form['status']
+    if status == 'deleted':
+        # special case deletion
+        client.lists.members.delete(list_id, subscriber_hash=member_id)
+    else:
+        client.lists.members.update(list_id, subscriber_hash=member_id, data={"status": "status"})
+    return Response(json.dumps({'id': member_id, 'status': status}), mimetype='application/json')
+
+
 def _get_mailchimp_client():
-    username = ''
     api_key = request.form['api-key'] or config.MAILCHIMP_SECRET_KEY
-    return MailChimp(username, api_key)
+    return MailChimp('', api_key)  # first argument is username which is not necessary
