@@ -86,7 +86,7 @@
     </div>
 </div>
 <script>
-    var apiKey;  // globals
+    var apiKey, listName, seenSubscribeConfirm = false, seenDeleteConfirm = false;  // "globals"
     // debug only
     apiKey = "{{ api_key }}";
 
@@ -104,8 +104,39 @@
         $('#lists-row').show();
     }
 
+    function subscribeEmail() {
+        var userId = $(this).closest('tr').attr('id');
+        var userEmail = $(this).closest('tr').find('td:first').text();
+        if (seenSubscribeConfirm || confirm('Are you sure you want to subscribe ' + userEmail + ' to "' + listName +
+                '"? \n\nYou should only do this if you have their consent. \n\n' +
+                "If you proceed, this dialog t be shown again.")) {
+            // moving ahead
+            seenSubscribeConfirm = true;
+            // subscribe
+            console.log('subscribe!');
+        } else {
+            console.log('bail!');
+        }
+    }
+
+    function deleteEmail() {
+        var userId = $(this).closest('tr').attr('id');
+        var userEmail = $(this).closest('tr').find('td:first').text();
+        if (seenDeleteConfirm || confirm('Are you sure you want to delete ' + userEmail + ' from "' + listName +
+                '"? \n\nThis is PERMANENT and NOT UNDOABLE. ' +
+                "\n\nIf you proceed, this dialog won't be shown again.")) {
+            // moving ahead
+            seenDeleteConfirm = true;
+            // delete
+            console.log('delete!');
+        } else {
+            console.log('bail!');
+        }
+    }
+
     function loadMembers(members) {
         var membersTableBody = $('#members').find('tbody');
+        listName = $('#lists').find(":selected").text();
         $.each(members.members, function() {
             membersTableBody.append(
                 $("<tr />").attr('id', this.id).append(
@@ -116,16 +147,15 @@
                     $("<td />").text(this.status)
                 ).append(
                     $("<td />").append(
-                        $("<button />").text("Subscribe").addClass('subscribe')
+                        $("<button />").text("Subscribe").addClass('subscribe').click(subscribeEmail)
                     ).append(
-                        $("<button />").text("Delete").addClass('delete')
+                        $("<button />").text("Delete").addClass('delete').click(deleteEmail)
                     )
                 )
             );
         });
         $('#members-row').show();
     }
-
     $(function () {
         // hook up forms ajax handling
         var formMapping = {
