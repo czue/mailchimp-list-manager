@@ -1,44 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>MailChimp Pending Subcriber Tools</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-
-  <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="static/css/normalize.css">
-  <link rel="stylesheet" href="static/css/skeleton.css">
-
-  <!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
-
+    <meta charset="utf-8">
+    <title>MailChimp Pending Subcriber Tools</title>
+    <meta name="description" content="">
+    <meta name="author" content="Cory Zue">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="static/css/normalize.css">
+    <link rel="stylesheet" href="static/css/skeleton.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-
-  <!-- Primary Page Layout
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
+<div class="container">
     <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
         <h1>Hello {{ name }}!</h1>
-          <h4>Basic Page</h4>
-          <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
-      </div>
     </div>
-  </div>
+    <div class="row">
+        <form id="credentials" method="post" action="/api/lists/">
+            <div class="row">
+                <div class="six columns">
+                    <label for="username">Your MailChimp Username</label>
+                    <input name="username" class="u-full-width" type="email" placeholder="john.doe@example.com" id="username" value="">
+                </div>
+                <div class="six columns">
+                    <label for="api-key">Your API key</label>
+                    <input name="api-key" class="u-full-width" type="password" placeholder="fd67d4fe19ec11e7a33e3c970e7be43b-us12" id="api-key" value="">
+                </div>
+            </div>
+            <label class="u-pull-right">
+                <input type="checkbox" name="opt-in">
+                <span class="label-body">You can email me content relevant to this tool</span>
+            </label>
+            <input id="submit-credentials" class="button-primary" type="submit" value="Load My Lists">
+        </form>
+    </div>
+    <div class="row" id="lists-row" style="display: none;">
+        <form id="lists" method="post" action="/api/members/">
+            <div class="row">
+                <div class="six columns">
+                    <label for="listInput">Choose a list</label>
+                    <select class="u-full-width" name='list' id="listInput"></select>
+                </div>
+            </div>
+            <input id="submit-list" class="button-primary" type="submit" value="Load Pending Members">
+        </form>
+    </div>
+</div>
+<script>
+    function loadLists(lists) {
+        var listOptions = $('#listInput');
+        $.each(lists.lists, function() {
+            listOptions.append($("<option />").val(this.id).text(this.name));
+        });
+        $('#lists-row').show();
+    };
 
-<!-- End Document
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    function loadMembers(members) {
+        console.log(members);
+    }
+
+    $(function () {
+        // hook up forms ajax handling
+        var formMapping = {
+            'credentials': loadLists,
+            'lists': loadMembers
+        };
+        $('form').submit(function (e) {
+            var form = $(this);
+            console.log('click!', form);
+            $.ajax({
+                 url: form.attr('action'),
+                 type: form.attr('method'),
+                 data: form.serialize(), // data to be submitted
+                 success: formMapping[form.attr('id')]
+            });
+            e.preventDefault();
+        });
+    });
+</script>
 </body>
 </html>
