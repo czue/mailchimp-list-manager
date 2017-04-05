@@ -39,7 +39,10 @@
     </div>
     <div class="row">
         <h3>Get started</h3>
-        <p>Don't worry - nothing you enter or see here will be saved anywhere.</p>
+        <p>
+            Don't worry - nothing you enter or see here will be saved anywhere, but if you're paranoid you can also
+            <a href="https://github.com/czue/mailchimp-list-manager">run this tool locally</a>.
+        </p>
         <form id="credentials" method="post" action="/api/lists/">
             <div class="row">
                 <div class="six columns">
@@ -75,14 +78,20 @@
           </tbody>
         </table>
     </div>
-    <div class="row">
-
+    <div class="row" id="error-row" style="display: none;">
+        <p><strong>
+            Oops, something went wrong! Are you sure you entered the right <a href="http://kb.mailchimp.com/integrations/api-integrations/about-api-keys" target="_blank">API Key</a>?
+        </strong></p>
     </div>
 </div>
 <script>
     var apiKey;  // globals
     // debug only
     apiKey = "{{ api_key }}";
+
+    function genericError() {
+        $("#error-row").show();
+    }
 
     function loadLists(lists) {
         var listOptions = $('#listInput');
@@ -118,13 +127,15 @@
             'lists': loadMembers
         };
         $('form').submit(function (e) {
+            $("#error-row").hide();  // hide existing errors on submit
             var form = $(this);
             apiKey = apiKey || form.find('input[name="api-key"]').val();
             $.ajax({
                  url: form.attr('action'),
                  type: form.attr('method'),
                  data: form.serialize(), // data to be submitted
-                 success: formMapping[form.attr('id')]
+                 success: formMapping[form.attr('id')],
+                 error: genericError,
             });
             e.preventDefault();
         });
