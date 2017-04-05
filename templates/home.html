@@ -72,6 +72,7 @@
               <th>Email</th>
               <th>Date Signed Up</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -106,14 +107,19 @@
     function loadMembers(members) {
         var membersTableBody = $('#members').find('tbody');
         $.each(members.members, function() {
-            debugger;
             membersTableBody.append(
                 $("<tr />").attr('id', this.id).append(
                     $("<td />").text(this.email_address)
                 ).append(
-                    $("<td />").text(this.timestamp_signup)
+                    $("<td />").text(this.timestamp_signup.substring(0, 10))
                 ).append(
                     $("<td />").text(this.status)
+                ).append(
+                    $("<td />").append(
+                        $("<button />").text("Subscribe").addClass('subscribe')
+                    ).append(
+                        $("<button />").text("Delete").addClass('delete')
+                    )
                 )
             );
         });
