@@ -1,0 +1,16 @@
+.header {
+    padding-top: 3em;
+}
+
+button {
+    margin-right: 1em;
+}
+
+button.delete {
+    background-color: #ff3939;
+    color: white;
+}
+
+button.delete:hover {
+    background-color: #ED0909;
+}
