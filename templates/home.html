@@ -137,10 +137,8 @@
         if (seenSubscribeConfirm || confirm('Are you sure you want to subscribe ' + memberEmail + ' to "' + listName +
                 '"? \n\nYou should only do this if you have their consent. \n\n' +
                 "If you proceed, this dialog t be shown again.")) {
-            // moving ahead
             seenSubscribeConfirm = true;
-            // subscribe
-            updateMember(memberId, 'subscribed')
+            updateMember(memberId, 'subscribed');
         }
     }
 
@@ -150,10 +148,8 @@
         if (seenDeleteConfirm || confirm('Are you sure you want to delete ' + memberEmail + ' from "' + listName +
                 '"? \n\nThis is PERMANENT and NOT UNDOABLE. ' +
                 "\n\nIf you proceed, this dialog won't be shown again.")) {
-            // moving ahead
             seenDeleteConfirm = true;
-            // delete
-            updateMember(memberId, 'deleted')
+            updateMember(memberId, 'deleted');
         }
     }
 
@@ -186,8 +182,9 @@
         });
         $('#members-row').show();
     }
+
     $(function () {
-        // hook up forms ajax handling
+        // hook up forms' ajax handling
         var formMapping = {
             'credentials': loadLists,
             'lists': loadMembers
@@ -199,7 +196,7 @@
             $.ajax({
                  url: form.attr('action'),
                  type: form.attr('method'),
-                 data: form.serialize(), // data to be submitted
+                 data: form.serialize(),  // data to be submitted
                  success: formMapping[form.attr('id')],
                  error: genericError,
             });
