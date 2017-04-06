@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>MailChimp Pending Subcriber Management</title>
+    <title>MailChimp List Helper</title>
     <meta name="description" content="">
     <meta name="author" content="Cory Zue">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="static/css/normalize.css">
     <link rel="stylesheet" href="static/css/skeleton.css">
     <link rel="stylesheet" href="static/css/site.css">
-    <link rel="icon" type="image/png" href="images/favicon.png">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
@@ -18,7 +17,7 @@
     <div class="row">
         <section class="header">
             <h2>MailChimp List Helper</h2>
-            <h5>A tool to help you manage pending subscribers in MailChimp</h5>
+            <h5>A tiny tool to help you manage pending subscribers in MailChimp</h5>
         </section>
     </div>
     <div class="row">
@@ -85,6 +84,14 @@
         </strong></p>
     </div>
 </div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <small>Built with &hearts; by <a href="http://www.coryzue.com">Cory Zue</a></small>
+        </div>
+    </div>
+</footer>
+
 <script>
     var apiKey, listId, listName, seenSubscribeConfirm = false, seenDeleteConfirm = false;  // "globals"
     // debug only
