@@ -13,8 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    if has_local_config:
-        template_vars = {'api_key': config.MAILCHIMP_SECRET_KEY}
+    template_vars = {'api_key': config.MAILCHIMP_SECRET_KEY} if has_local_config else {}
     return render_template('home.html', **template_vars)
 
 
