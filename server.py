@@ -1,13 +1,21 @@
 import json
 from flask import Flask, render_template, request, Response
 from mailchimp3 import MailChimp
-import config
+try:
+    import config
+    has_local_config = True
+except ImportError:
+    has_local_config = False
+
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def hello_world():
-    return render_template('home.html', api_key=config.MAILCHIMP_SECRET_KEY)
+    if has_local_config:
+        template_vars = {'api_key': config.MAILCHIMP_SECRET_KEY}
+    return render_template('home.html', **template_vars)
 
 
 @app.route('/api/lists/', methods=['POST'])
