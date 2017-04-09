@@ -49,7 +49,7 @@ def update_member():
         # special case deletion
         client.lists.members.delete(list_id, subscriber_hash=member_id)
     else:
-        client.lists.members.update(list_id, subscriber_hash=member_id, data={"status": "status"})
+        client.lists.members.update(list_id, subscriber_hash=member_id, data={"status": status})
     return Response(json.dumps({'id': member_id, 'status': status}), mimetype='application/json')
 
 
