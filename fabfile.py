@@ -63,9 +63,7 @@ def deploy():
     require('root', provided_by=ENVIRONMENTS)
     try:
         execute(update_code)
-        execute(update_virtualenv)
-        execute(migrate)
-        execute(_do_collectstatic)
+        # execute(update_virtualenv)
     finally:
         # hopefully bring the server back to life if anything goes wrong
         execute(services_restart)
@@ -120,26 +118,6 @@ def services_restart():
     _supervisor_command('stop all')
     _supervisor_command('start  all')
 
-
-def migrate():
-    """ run south migration on remote environment """
-    require('code_root', provided_by=ENVIRONMENTS)
-    with cd(env.code_root):
-        sudo('%(virtualenv_root)s/bin/python manage.py migrate --noinput' % env, user=env.sudo_user)
-
-def _do_collectstatic():
-    """
-    Collect static after a code update
-    """
-    with cd(env.code_root):
-        sudo('%(virtualenv_root)s/bin/python manage.py collectstatic --noinput' % env, user=env.sudo_user)
-
-@task
-def collectstatic():
-    """ run collectstatic on remote environment """
-    require('code_root', provided_by=ENVIRONMENTS)
-    update_code()
-    _do_collectstatic()
 
 
 def _supervisor_command(command):
