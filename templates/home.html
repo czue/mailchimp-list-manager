@@ -86,6 +86,9 @@
           </tbody>
         </table>
     </div>
+    <div class="row" id="no-members-row" style="display: none;">
+        <p><strong>No pending members found. You're all caught up!</strong></p>
+    </div>
     <div class="row" id="error-row" style="display: none;">
         <p><strong>
             Oops, something went wrong! Are you sure you entered the right <a href="http://kb.mailchimp.com/integrations/api-integrations/about-api-keys" target="_blank">API Key</a>?
@@ -120,6 +123,13 @@
 
     function loadLists(lists) {
         var listOptions = $('#listInput');
+
+        // hide anything that was showing
+        $('#members-row').hide();
+        $('#no-members-row').hide();
+
+        // clear list if existing
+        listOptions.html('')
         $.each(lists.lists, function() {
             listOptions.append($("<option />").val(this.id).text(this.name));
         });
@@ -135,8 +145,7 @@
             'list': listId,
             'member-id': memberId,
             'status': status
-
-        }
+        };
         $.ajax({
              url: '/api/update_member/',
              type: 'post',
@@ -177,29 +186,36 @@
         listId = $('#lists').find(":selected").val();
         listName = $('#lists').find(":selected").text();
 
-        // wipe anything existing in member table
+        // hide and wipe anything existing in member table
+        $('#members-row').hide();
         $('#members tbody').html('');
+        // and hide "no members" message if exists
+        $('#no-members-row').hide();
 
-        // render member table
-        var membersTableBody = $('#members').find('tbody');
-        $.each(members.members, function() {
-            membersTableBody.append(
-                $("<tr />").attr('id', this.id).append(
-                    $("<td />").text(this.email_address)
-                ).append(
-                    $("<td />").text(this.timestamp_signup.substring(0, 10))
-                ).append(
-                    $("<td />").text(this.status)
-                ).append(
-                    $("<td />").append(
-                        $("<button />").text("Subscribe").addClass('subscribe').click(subscribeEmail)
+        if (members.members.length) {
+            // render member table
+            var membersTableBody = $('#members').find('tbody');
+            $.each(members.members, function() {
+                membersTableBody.append(
+                    $("<tr />").attr('id', this.id).append(
+                        $("<td />").text(this.email_address)
                     ).append(
-                        $("<button />").text("Delete").addClass('delete').click(deleteEmail)
+                        $("<td />").text(this.timestamp_signup.substring(0, 10))
+                    ).append(
+                        $("<td />").text(this.status)
+                    ).append(
+                        $("<td />").append(
+                            $("<button />").text("Subscribe").addClass('subscribe').click(subscribeEmail)
+                        ).append(
+                            $("<button />").text("Delete").addClass('delete').click(deleteEmail)
+                        )
                     )
-                )
-            );
-        });
-        $('#members-row').show();
+                );
+            });
+            $('#members-row').show();
+        } else {
+            $('#no-members-row').show();
+        }
     }
 
     $(function () {
