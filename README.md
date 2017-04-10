@@ -3,12 +3,16 @@
 A simple set of tools that let you manage your pending mailchimp subscribers
 (people who signed up but never confirmed their email addresses).
 
-This is useful if you want to manually subscribe people you know wanted to sign up but didn't complete the confirmation workflow,
-or if you do a lot of testing and want to clean out your lists.
+More information about why you might want to do this [can be found here](http://www.coryzue.com/writing/mailchimp-limbo/).
 
-This comes with both a flask web application and a command line utility.
+## Hosted site
+
+A free version of this tool is [hosted here](https://mailchimp.coryzue.com/).
+Follow the instructions below if you want to run it locally or on your own server.
 
 ## Installation
+
+This comes with both a flask web application and a command line utility.
 
 If you haven't already, first [setup Python, pip, and a virtualenv](https://packaging.python.org/installing/).
 
