@@ -99,30 +99,16 @@ def touch_supervisor():
     _supervisor_command('update')
 
 
-def services_start():
-    ''' Start the gunicorn servers '''
-    require('environment', provided_by=ENVIRONMENTS)
-    _supervisor_command('update')
-    _supervisor_command('reload')
-    _supervisor_command('start  all')
-
-def services_stop():
-    ''' Stop the gunicorn servers '''
-    require('environment', provided_by=ENVIRONMENTS)
-    _supervisor_command('stop all')
-
-
 def services_restart():
-    ''' Stop and restart all supervisord services'''
     require('environment', provided_by=ENVIRONMENTS)
-    _supervisor_command('stop all')
-    _supervisor_command('start  all')
-
+    _supervisor_command('stop mailchimp-flask')
+    _supervisor_command('start mailchimp-flask')
 
 
 def _supervisor_command(command):
     require('hosts', provided_by=ENVIRONMENTS)
     sudo('supervisorctl %s' % (command), shell=False, user='root')
+
 
 @task
 def print_supervisor_files():
