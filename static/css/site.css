@@ -14,3 +14,14 @@ button.delete {
 button.delete:hover {
     background-color: #ED0909;
 }
+
+.notice {
+    background-color: #fff0a0;
+    padding: 1em;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.nomargin {
+    margin-bottom: 0px;
+}
